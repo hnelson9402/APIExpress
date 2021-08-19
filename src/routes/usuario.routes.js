@@ -7,8 +7,7 @@ let router = express.Router();
 router.get('/', controller.index);
 
 //show one user specific
-router.get('/',(req, res) => {  
-});
+router.get('/:cedula',controller.user);
 
 
 // define the about route
