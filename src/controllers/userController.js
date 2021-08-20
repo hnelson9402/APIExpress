@@ -4,17 +4,19 @@ import num from '../config/validate.js';
 const controller = {}
 
 //show all users
-controller.index = (req, res) => {
-    connection.query('SELECT * FROM usuario',(error, results) =>{
-      if (error) throw error;
-      //console.log(results);
-      let data = {data: results};
-      res.json(data)
-    });
+controller.index = async (req, res) => {   
+    try {        
+        let results = await connection.awaitQuery('SELECT * FROM usuario');
+        let data = {data: results};
+        console.log("funciono");
+        res.json(data)
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 //show one user specific
-controller.user = (req, res) => {
+controller.user = async (req, res) => {
     let cedula = req.params.cedula;
 
     if (!num.test(cedula)) {
@@ -23,25 +25,20 @@ controller.user = (req, res) => {
             message: "Datos enviados en formato incorrecto"
         });    
     } else {
-        connection.query('SELECT * FROM usuario WHERE cedula = ?',[cedula],(error, results) =>{
-            if (error) {
-                res.status(500).res.json({
-                    status: "error",  
-                    message: "Error interno del servidor"
-                });
+        try {
+            let results = await connection.awaitQuery('SELECT * FROM usuario WHERE cedula = ?',[cedula]);
+            if (results != "") {                
+                let data = {data: results};
+                res.json(data)
             } else {
-                if (results != "") {
-                    //console.log(results);
-                    let data = {data: results};
-                    res.json(data)
-                } else {
-                    res.status(400).json({
-                        status: "error",
-                        message: "La cedula digitada no esta registrada"
-                    }); 
-                }
+                res.status(400).json({
+                    status: "error",
+                    message: "La cedula digitada no esta registrada"
+                }); 
             }
-        });
+        } catch (error) {
+            console.error(error);
+        }       
     }
 };
 

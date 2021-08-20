@@ -1,23 +1,22 @@
-import mysql from 'mysql';
+import mysql from 'mysql-await';
 import {config} from 'dotenv';
 
 config();
 
-let connection = mysql.createConnection({
-  host     : process.env.HOST,
-  user     : process.env.USER,
-  password : process.env.PASSWORD,
-  database : process.env.DATABASE
+const pool = mysql.createPool({
+  connectionLimit : process.env.CONNECTIONLIMIT,
+  host            : process.env.HOST,
+  user            : process.env.USER,
+  password        : process.env.PASSWORD,
+  database        : process.env.DATABASE
 });
- 
-connection.connect((error) =>{
-   if (error) throw error;
-   //console.log("conectado");
+
+const connection = await pool.awaitGetConnection();
+
+connection.on(`error`, (err) => {
+  console.error(`Connection error ${err.code}`);
 });
- 
-// connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-//   if (error) throw error;
-//   console.log('The solution is: ', results[0].solution);
-// });
+
+connection.release();
  
 export default connection
