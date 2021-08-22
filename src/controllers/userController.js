@@ -1,4 +1,6 @@
 import connection from '../db/connectionBD.js'
+import error from '../config/error.js';
+import { number } from '../config/validatorHNPT.js';
 
 const controller = {}
 
@@ -6,52 +8,37 @@ const controller = {}
 controller.index = async (req, res) => {   
     try {        
         let results = await connection.awaitQuery('SELECT * FROM usuario');
-        let data = {data: results};
-        console.log("funciono");
+        let data = {data: results};        
         res.json(data)
     } catch (error) {
-        console.error(error);
+        res.status(500).json(error('error','Error interno'));
     }
 };
 
 //show one user specific
-// controller.user = async (req, res) => {
-//     let cedula = req.params.cedula;
+controller.user = async (req, res) => {
+    let { cedula } = req.params;
 
-//     if (!num.test(cedula)) {
-//         res.status(400).json({
-//             status: "error",
-//             message: "Datos enviados en formato incorrecto"
-//         });    
-//     } else {
-//         try {
-//             let results = await connection.awaitQuery('SELECT * FROM usuario WHERE cedula = ?',[cedula]);
-//             if (results != "") {                
-//                 let data = {data: results};
-//                 res.json(data)
-//             } else {
-//                 res.status(400).json({
-//                     status: "error",
-//                     message: "La cedula digitada no esta registrada"
-//                 }); 
-//             }
-//         } catch (error) {
-//             console.error(error);
-//         }       
-//     }
-// };
+    if (!number(cedula)) {
+        res.status(400).json(error('error','Datos enviados en formato incorrecto'));    
+    } else {
+        try {
+            let results = await connection.awaitQuery('SELECT * FROM usuario WHERE cedula = ?',[cedula]);
+            if (results != "") {                
+                let data = {data: results};
+                res.json(data)
+            } else {
+                res.status(400).json(error('error','La cedula digitada no esta registrada')); 
+            }
+        } catch (error) {
+            res.status(500).json(error('error','Error interno'));
+        }       
+    }
+};
 
 //save new user
 controller.save = async (req , res) =>{
-     res.json("hola desde save");
-    //  if (nombre == undefined) {
-    //     res.status(400).res.json({
-    //         status: "error",
-    //         message: "Todos los campos son requeridos"
-    //     });
-    //  } else {
-    //      res.json("hola");
-    //  }
+     res.json(req.body);   
 };
 
 
