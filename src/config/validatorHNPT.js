@@ -1,3 +1,5 @@
+import sha from 'sha.js';
+
 //Just Number
 const number = (field) => {
     return /^[0-9]+$/.test(field) ? true : false;
@@ -38,5 +40,10 @@ const max = (field , max) => {
     return field.length > max ? true : false;
 }
 
+//Generate token
+const generateToken = (param1 , param2) => {
+    return sha('sha256').update(param1 + param2).digest('hex')
+}
+
 export default isset;
-export {number , text , isEmpty , isEmail , matches , min , max};
+export {number , text , isEmpty , isEmail , matches , min , max , generateToken};

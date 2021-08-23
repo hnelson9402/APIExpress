@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "mysql-await": "^2.1.8",
     "path": "^0.12.7",
+    "sha.js": "^2.4.11",
     "yup": "^0.32.9"
   },
   "devDependencies": {
