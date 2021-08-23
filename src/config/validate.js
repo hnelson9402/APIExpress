@@ -1,20 +1,33 @@
+import * as yup from 'yup';
 import error from "./error.js";
 import isset, { isEmpty, max } from "./validatorHNPT.js";
 
 
 //Validate Form User
-const validateFormUser = (req, res, next) => {
-    const { nombre, apellido, cedula, correo, rol, estado, password, confirmPassword } = req.body;
+const validateFormUser = async (req, res, next) => {
+    try {        
+        let schema = yup.object().shape({
+            nombre: yup.string().required("El campo nombre es requerido").matches(/^[a-zA-Z ]+$/,"El campo nombre solo admite texto"),
+            apellido: yup.string().required("El campo apellido es requerido").matches(/^[a-zA-Z ]+$/,"El campo apellido solo admite texto"),
+            cedula: yup.string().required("El campo cedula es requerido").matches(/^[0-9]+$/, "El campo cedula solo admite números"),
+            correo: yup.string().required("El campo correo es requerido").email("El correo ingresado es invalido"),
+            rol: yup.string().required("El campo rol es requerido").matches(/^[0-9]+$/,"El campo rol solo admite números").max(1,"El campo rol solo admite un digito"),
+            estado: yup.string().required("El campo estado es requerido").matches(/^[a-zA-Z]+$/,"El campo estado solo admite texto"),
+            password: yup.string().required("El campo password es requerido").min(8,"La contraseña debe tener un mnimo de 8 caracteres"),
+            confirmPassword: yup.string().required("El campo confirmar password es requerido").min(8,"La contraseña debe tener un mnimo de 8 caracteres"),                              
+        });
 
-    if (isset(nombre) || isset(apellido) || isset(cedula) || isset(correo) || isset(rol) || isset(estado) || isset(password)
-        || isset(confirmPassword)) {
-        res.status(400).json(error('error', 'Datos enviados incompletos'));
-    } else if (nombre === "" || apellido === "" || cedula === "" || correo === "" || rol === ""
-        || estado === "" || password === "" || confirmPassword === "") {
-        res.status(400).json(error('error', 'Todos los campos son necesarios'));
-    } else {
-        next();
-    }
+        await schema.validate(req.body);
+
+        if (req.body.password !== req.body.confirmPassword) {
+            res.status(400).json(error('error','Las contraseña no coinciden'));
+        } else {
+            next();
+        }
+
+    } catch (err) {
+        return res.status(400).json(error('error',err.errors[0]));
+    }   
 };
 
 export default validateFormUser;
