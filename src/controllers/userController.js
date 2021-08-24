@@ -1,6 +1,6 @@
 import connection from '../db/connectionBD.js'
 import error from '../config/error.js';
-import { number , generateToken } from '../config/validatorHNPT.js';
+import { number , generateToken , generatePassword , comparePassword } from '../config/validatorHNPT.js';
 
 const controller = {}
 
@@ -40,8 +40,9 @@ controller.user = async (req, res) => {
 controller.save = async (req , res) =>{
      const { nombre,apellido,cedula,correo,rol,estado,password } = req.body; 
      let IDToken = generateToken(cedula,correo);
+     let passEnc = await generatePassword(password);     
 
-     res.json(IDToken);
+     //res.json(passEnc);
 };
 
 

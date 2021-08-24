@@ -1,4 +1,5 @@
 import sha from 'sha.js';
+import bcrypt from 'bcryptjs';
 
 //Just Number
 const number = (field) => {
@@ -45,5 +46,17 @@ const generateToken = (param1 , param2) => {
     return sha('sha256').update(param1 + param2).digest('hex')
 }
 
+//Generate Password
+const generatePassword = async (string) =>{
+      let pass = await bcrypt.hash(string, 9);
+      return pass;
+}
+
+//Compare Password
+const comparePassword = async (password , hash) =>{
+   let compare = await bcrypt.compare(password, hash);
+   return compare;
+}
+
 export default isset;
-export {number , text , isEmpty , isEmail , matches , min , max , generateToken};
+export {number , text , isEmpty , isEmail , matches , min , max , generateToken , generatePassword , comparePassword};
