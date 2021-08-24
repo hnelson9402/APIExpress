@@ -1,5 +1,6 @@
 import express from 'express'
 import port from '../src/config/port.js'
+import authRoutes from '../src/routes/auth.routes.js'
 import usuarioRoutes from '../src/routes/usuario.routes.js'
 
 const app = express()
@@ -14,6 +15,7 @@ app.get('/', (req, res) => {
 })
 
 //Routes
+app.use('/auth' ,authRoutes);
 app.use('/usuario' ,usuarioRoutes);
 
 //Route 404

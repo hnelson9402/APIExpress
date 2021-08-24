@@ -1,7 +1,6 @@
 import moment from 'moment';
 import connection from '../db/connectionBD.js'
-import error from '../config/error.js';
-import { number , generateToken , generatePassword , comparePassword } from '../config/validatorHNPT.js';
+import { number , generateToken , generatePassword , error} from '../config/validatorHNPT.js';
 
 const controller = {}
 
@@ -24,7 +23,7 @@ controller.user = async (req, res) => {
         res.status(400).json(error('error','Datos enviados en formato incorrecto'));    
     } else {
         try {
-            let results = await connection.awaitQuery('SELECT * FROM usuario WHERE cedula = ?',[cedula]);
+            let results = await connection.awaitQuery('SELECT * FROM usuario WHERE cedula = ?',[cedula]);            
             if (results != "") {                
                 let data = {data: results};
                 res.json(data)

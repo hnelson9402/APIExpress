@@ -41,9 +41,14 @@ const max = (field , max) => {
     return field.length > max ? true : false;
 }
 
+//sent message error
+const error = (status,message) => {
+    return { status, message };
+}
+
 //Generate token
 const generateToken = (param1 , param2) => {
-    return sha('sha256').update(param1 + param2).digest('hex')
+    return sha('sha512').update(param1 + param2).digest('hex')
 }
 
 //Generate Password
@@ -59,4 +64,4 @@ const comparePassword = async (password , hash) =>{
 }
 
 export default isset;
-export {number , text , isEmpty , isEmail , matches , min , max , generateToken , generatePassword , comparePassword};
+export {number , text , isEmpty , isEmail , matches , min , max , generateToken , generatePassword , comparePassword , error};
