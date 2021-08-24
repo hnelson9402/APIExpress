@@ -1,5 +1,6 @@
 import sha from 'sha.js';
 import bcrypt from 'bcryptjs';
+import moment from 'moment';
 
 //Just Number
 const number = (field) => {
@@ -47,8 +48,8 @@ const error = (status,message) => {
 }
 
 //Generate token
-const generateToken = (param1 , param2) => {
-    return sha('sha512').update(param1 + param2).digest('hex')
+const generateToken = () => {
+    return sha('sha512').update(moment().format('YYYY-MM-DD HH:mm:ss')+Math.random().toString(36)).digest('hex')
 }
 
 //Generate Password

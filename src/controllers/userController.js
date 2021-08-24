@@ -40,7 +40,7 @@ controller.user = async (req, res) => {
 controller.save = async (req , res) =>{
     try {        
         const { nombre,apellido,cedula,correo,rol,estado,password } = req.body; 
-        let IDToken = generateToken(cedula,correo);
+        let IDToken = generateToken();
         let passEnc = await generatePassword(password);     
         moment.locale('col');
         let fecha = moment().format('YYYY-MM-DD HH:mm:ss');
