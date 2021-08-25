@@ -1,6 +1,6 @@
 import connection from '../db/connectionBD.js';
 import { generateToken , error , comparePassword} from '../config/validatorHNPT.js';
-import saveToken from '../db/token.js';
+import token from '../db/token.js';
 
 const controller = {}
 
@@ -16,11 +16,12 @@ controller.login = async (req, res) => {
             if (await comparePassword(pass,password) && estado == "activo") {
                 let keyToken = generateToken();
                 let data = {nombre,rol,keyToken};
-                let saveT = await saveToken(ID_USUARIO,keyToken);
+                token.delete();//Delete the expired token
+                let saveT = await token.save(ID_USUARIO,keyToken);
                 
                 if (!saveT) {
                     res.status(500).json(error('error','No se puede registrar el token'));
-                } else {
+                } else {                    
                     res.status(200).json(error('ok',data));
                 }
                
