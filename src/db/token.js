@@ -1,5 +1,6 @@
 import connection from "./connectionBD.js";
 import moment from "moment";
+import isset , { isEmpty , error } from './../config/validatorHNPT.js';
 
 moment.locale('col');
 
@@ -25,6 +26,27 @@ token.delete = async () => {
         return results.affectedRows > 0 ? true : false; 
     } catch (err) {
         return false;        
+    }   
+}
+
+//Validate token of access
+token.validateByParams = async (req,res,next) => {
+    const { keyToken } = req.params;
+    let fecha = moment().format('YYYY-MM-DD HH:mm:ss'); 
+
+    try {        
+        if (isset(keyToken) || isEmpty(keyToken)) {
+            res.status(400).json(error('error' , 'El campo keyToken es requerido'));
+        } else {
+            let results = await connection.awaitQuery("SELECT token FROM token WHERE token = ? AND fecha > ? ",[keyToken,fecha]);            
+            if (results != "") {
+               next();
+            } else {
+                res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
+            } 
+        }  
+    } catch (err) {
+        res.status(400).json(error('error','No se puede validar el keyToken'));
     }   
 }
 

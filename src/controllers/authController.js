@@ -4,7 +4,7 @@ import token from '../db/token.js';
 
 const controller = {}
 
-//show one user specific
+//login controller
 controller.login = async (req, res) => {   
     const { email , pass } = req.params;
     
