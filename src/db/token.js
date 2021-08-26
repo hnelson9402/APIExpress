@@ -29,7 +29,7 @@ token.delete = async () => {
     }   
 }
 
-//Validate token of access
+//Validate token of access for params
 token.validateByParams = async (req,res,next) => {
     const { keyToken } = req.params;
     let fecha = moment().format('YYYY-MM-DD HH:mm:ss'); 
@@ -47,6 +47,21 @@ token.validateByParams = async (req,res,next) => {
         }  
     } catch (err) {
         res.status(400).json(error('error','No se puede validar el keyToken'));
+    }   
+}
+
+//validate token of access
+token.validateToken = async (token) => {
+    let fecha = moment().format('YYYY-MM-DD HH:mm:ss');     
+    try {       
+        let results = await connection.awaitQuery("SELECT token FROM token WHERE token = ? AND fecha > ? ",[token,fecha]);            
+        if (results != "") {            
+            return true;
+        } else {
+            return false;
+        }          
+    } catch (err) {
+       return false;
     }   
 }
 

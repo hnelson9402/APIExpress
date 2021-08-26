@@ -1,10 +1,12 @@
 import * as yup from 'yup';
 import { error } from "./validatorHNPT.js";
+import token from '../db/token.js';
 
 //Validate Form User
 const validateFormUser = async (req, res, next) => {
     try {        
         let schema = yup.object().shape({
+            keyToken: yup.string().required("El campo keyToken es requerido"),
             nombre: yup.string().required("El campo nombre es requerido").matches(/^[a-zA-Z ]+$/,"El campo nombre solo admite texto"),
             apellido: yup.string().required("El campo apellido es requerido").matches(/^[a-zA-Z ]+$/,"El campo apellido solo admite texto"),
             cedula: yup.string().required("El campo cedula es requerido").matches(/^[0-9]+$/, "El campo cedula solo admite números"),
@@ -17,15 +19,18 @@ const validateFormUser = async (req, res, next) => {
 
         await schema.validate(req.body);
 
-        if (req.body.password !== req.body.confirmPassword) {
-            res.status(400).json(error('error','Las contraseña no coinciden'));
+        let getStateToken = await token.validateToken(req.body.keyToken);        
+
+        if (!getStateToken) {        
+            res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
+        } else if (req.body.password !== req.body.confirmPassword) {
+            res.status(400).json(error('error','Las contraseñas no coinciden'));
         } else {
             next();
         }
-
     } catch (err) {
         return res.status(400).json(error('error',err.errors[0]));
-    }   
+    }
 };
 
 //Validate Login
