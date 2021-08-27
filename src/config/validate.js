@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import { error } from "./validatorHNPT.js";
 import token from '../db/token.js';
+import sqlQuery from '../db/sql.js';
 
 //Validate Form User
 const validateFormUser = async (req, res, next) => {
@@ -19,10 +20,16 @@ const validateFormUser = async (req, res, next) => {
 
         await schema.validate(req.body);
 
-        let getStateToken = await token.validateToken(req.body.keyToken);        
+        let getStateToken = await token.validateToken(req.body.keyToken);
+        let ifExistsCedula = await sqlQuery.ifExists('cedula','usuario','cedula',req.body.cedula);    
+        let ifExistsCorreo = await sqlQuery.ifExists('correo','usuario','correo',req.body.correo);        
 
         if (!getStateToken) {        
             res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
+        } else if (ifExistsCedula) {
+            res.status(400).json(error('error','La cedula ingresada esta registrada'));
+        } else if (ifExistsCorreo) {
+            res.status(400).json(error('error','El correo ingresado esta registrado'));
         } else if (req.body.password !== req.body.confirmPassword) {
             res.status(400).json(error('error','Las contraseñas no coinciden'));
         } else {

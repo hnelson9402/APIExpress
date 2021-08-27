@@ -32,34 +32,26 @@ token.delete = async () => {
 //Validate token of access for params
 token.validateByParams = async (req,res,next) => {
     const { keyToken } = req.params;
-    let fecha = moment().format('YYYY-MM-DD HH:mm:ss'); 
+         
+    if (isset(keyToken) || isEmpty(keyToken)) {
+        res.status(400).json(error('error' , 'El campo keyToken es requerido'));
+    } else {
+        let getStateToken = await token.validateToken(keyToken);        
 
-    try {        
-        if (isset(keyToken) || isEmpty(keyToken)) {
-            res.status(400).json(error('error' , 'El campo keyToken es requerido'));
+        if (!getStateToken) {        
+            res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
         } else {
-            let results = await connection.awaitQuery("SELECT token FROM token WHERE token = ? AND fecha > ? ",[keyToken,fecha]);            
-            if (results != "") {
-               next();
-            } else {
-                res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
-            } 
-        }  
-    } catch (err) {
-        res.status(400).json(error('error','No se puede validar el keyToken'));
-    }   
+            next();
+        }      
+    }      
 }
 
 //validate token of access
 token.validateToken = async (token) => {
     let fecha = moment().format('YYYY-MM-DD HH:mm:ss');     
     try {       
-        let results = await connection.awaitQuery("SELECT token FROM token WHERE token = ? AND fecha > ? ",[token,fecha]);            
-        if (results != "") {            
-            return true;
-        } else {
-            return false;
-        }          
+        let results = await connection.awaitQuery("SELECT token FROM token WHERE token = ? AND fecha > ? ",[token,fecha]); 
+        return results != "" ? true : false;                
     } catch (err) {
        return false;
     }   
