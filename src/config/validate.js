@@ -3,8 +3,10 @@ import { error } from "./validatorHNPT.js";
 import token from '../db/token.js';
 import sqlQuery from '../db/sql.js';
 
+const validate = {}
+
 //Validate Form User
-const validateFormUser = async (req, res, next) => {
+validate.formUser = async (req, res, next) => {
     try {        
         let schema = yup.object().shape({
             keyToken: yup.string().required("El campo keyToken es requerido"),
@@ -36,12 +38,12 @@ const validateFormUser = async (req, res, next) => {
             next();
         }
     } catch (err) {
-        return res.status(400).json(error('error',err.errors[0]));
+        res.status(400).json(error('error',err.errors[0]));
     }
 };
 
 //Validate Login
-export const validateLogin = async (req, res, next) => {   
+validate.login = async (req, res, next) => {   
     try {        
         let schema = yup.object().shape({            
             email: yup.string().required("El campo correo es requerido").email("El correo ingresado es invalido"),           
@@ -53,8 +55,31 @@ export const validateLogin = async (req, res, next) => {
         next();
 
     } catch (err) {
-        return res.status(400).json(error('error',err.errors[0]));
+        res.status(400).json(error('error',err.errors[0]));
     }   
 };
 
-export default validateFormUser;
+//Validate reset password
+validate.resetPassword = async (req,res,next) => {
+    try {        
+        let schema = yup.object().shape({  
+            keyToken: yup.string().required("El campo keyToken es requerido"),          
+            newResetPassword: yup.string().required("El campo Contraseña es requerido").min(8,"La contraseña debe tener un mínimo de 8 caracteres"),           
+            confirmNewResetPassword: yup.string().required("El campo confirmar contraseña es requerido").min(8,"La contraseña debe tener un minimo de 8 caracteres"),
+            IDToken: yup.string().required("El campo IDToken es requerido"),
+        });
+        await schema.validate(req.body);  
+        
+        const { newResetPassword , confirmNewResetPassword } = req.body;
+
+        if (newResetPassword !== confirmNewResetPassword) {
+             res.status(400).json(error('error','Las contraseñas son diferentes'));
+        } else {
+            next();
+        }
+    } catch (err) {
+        res.status(400).json(error('error',err.errors[0]));
+    }  
+}
+
+export default validate;

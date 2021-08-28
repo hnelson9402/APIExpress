@@ -7,20 +7,22 @@ import { error } from '../src/config/validatorHNPT.js'
 
 const app = express()
 
+//Enable in production
 //Cors settings
-var whitelist = ['http://127.0.0.1:5500']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+// var whitelist = ['http://127.0.0.1:5500']
+// var corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
 //Middleware
-app.use(cors(corsOptions))
+//app.use(cors(corsOptions))// Enable in production
+app.use(cors())//Disable in production
 app.use(express.json())
 
 //setting

@@ -57,5 +57,22 @@ controller.save = async (req , res) =>{
     }      
 };
 
+//Reset password
+controller.resetPassword = async (req,res,next) => {
+    try {        
+        const { newResetPassword,confirmNewResetPassword,IDToken,keyToken } = req.body;        
+        let passEnc = await generatePassword(newResetPassword);            
+        
+        let results = await connection.awaitQuery('UPDATE usuario set password = ? WHERE IDToken = ?',[passEnc,IDToken]);
+        if (results.affectedRows > 0) {            
+            res.status(200).json(error('ok','Contraseña restablecida'));
+        } else {
+            res.status(400).json(error('error','No se puede restablecer la contraseña')); 
+        }
+    } catch (err) {
+        res.status(500).json(error('error', err));   
+    }  
+}
+
 
 export default controller;
