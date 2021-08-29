@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import isset , { error , validateJwt , isEmpty } from "./validatorHNPT.js";
 import key from '../config/key.js';
+import sqlQuery from './../db/sql.js';
 
 const validate = {}
 

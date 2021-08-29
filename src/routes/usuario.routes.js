@@ -8,7 +8,7 @@ let router = express.Router();
 router.get('/',validate.token, controller.index);
 
 //show one user specific
-//router.get('/:keyToken/:cedula',token.validateByParams,controller.user);
+router.get('/:cedula',validate.token,controller.user);
 
 //save new user
 //router.post('/', validate.formUser,controller.save);
