@@ -37,7 +37,7 @@ controller.user = async (req, res) => {
 };
 
 //save new user
-controller.save = async (req , res) =>{
+controller.save = async (req , res) =>{    
     try {        
         const { nombre,apellido,cedula,correo,rol,estado,password } = req.body; 
         let IDToken = generateToken();

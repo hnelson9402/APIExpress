@@ -11,9 +11,9 @@ router.get('/',validate.token, controller.index);
 router.get('/:cedula',validate.token,controller.user);
 
 //save new user
-//router.post('/', validate.formUser,controller.save);
+router.post('/', validate.formUser,controller.save);
 
 //Reset password
-//router.patch('/resetPassword',validate.resetPassword,controller.resetPassword)
+router.patch('/resetPassword',validate.resetPassword,controller.resetPassword)
   
 export default router
