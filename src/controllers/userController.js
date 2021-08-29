@@ -5,7 +5,7 @@ import { number , generateToken , generatePassword , error} from '../config/vali
 const controller = {}
 
 //show all users
-controller.index = async (req, res) => {   
+controller.index = async (req, res) => {     
     try {        
         let results = await connection.awaitQuery('SELECT * FROM usuario');
         let data = {data: results};        
@@ -60,7 +60,7 @@ controller.save = async (req , res) =>{
 //Reset password
 controller.resetPassword = async (req,res,next) => {
     try {        
-        const { newResetPassword,confirmNewResetPassword,IDToken,keyToken } = req.body;        
+        const { newResetPassword , IDToken } = req.body;        
         let passEnc = await generatePassword(newResetPassword);            
         
         let results = await connection.awaitQuery('UPDATE usuario set password = ? WHERE IDToken = ?',[passEnc,IDToken]);

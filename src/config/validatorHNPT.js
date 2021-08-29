@@ -1,19 +1,20 @@
 import sha from 'sha.js';
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
+import jwt from 'jsonwebtoken';
 
 //Just Number
-const number = (field) => {
+export const number = (field) => {
     return /^[0-9]+$/.test(field) ? true : false;
 }
 
 //Just text
-const text = (field) => {
+export const text = (field) => {
     return /^[a-zA-Z ]$/.test(field) ? true : false;
 } 
 
 //Validate fields empty
-const isEmpty = (field) => {
+export const isEmpty = (field) => {
     return field === "" ? true : false;  
 };
 
@@ -23,46 +24,60 @@ const isset = (field) => {
 }
 
 //Validate email
-const isEmail = (email) => {
+export const isEmail = (email) => {
     return /^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/.test(email) ? true : false;
 }
 
 //Matches
-const matches = (field , regex) => {
+export const matches = (field , regex) => {
     return regex.test(field) ? true : false;
 }
 
 //min
-const min = (field , min) => {
+export const min = (field , min) => {
     return field.length < min ? true : false;
 }
 
 //max
-const max = (field , max) => {
+export const max = (field , max) => {
     return field.length > max ? true : false;
 }
 
 //sent message error
-const error = (status,message) => {
+export const error = (status,message) => {
     return { status, message };
 }
 
 //Generate token
-const generateToken = () => {
+export const generateToken = () => {
     return sha('sha512').update(moment().format('YYYY-MM-DD HH:mm:ss')+Math.random().toString(36)).digest('hex')
 }
 
 //Generate Password
-const generatePassword = async (string) =>{
+export const generatePassword = async (string) =>{
       let pass = await bcrypt.hash(string, 9);
       return pass;
 }
 
 //Compare Password
-const comparePassword = async (password , hash) =>{
+export const comparePassword = async (password , hash) =>{
    let compare = await bcrypt.compare(password, hash);
    return compare;
 }
 
+//generate token jwt
+export const generateTokenJwt = (payload,secretKey) =>{    
+    return jwt.sign(payload, secretKey, { expiresIn: "6h" });
+}
+
+//validate jwt
+export const validateJwt = (token,secretKey) => {
+    try {
+        let data = jwt.verify(token, secretKey);            
+        return data;
+    } catch (error) {
+        return false;
+    }
+}
+
 export default isset;
-export {number , text , isEmpty , isEmail , matches , min , max , generateToken , generatePassword , comparePassword , error};

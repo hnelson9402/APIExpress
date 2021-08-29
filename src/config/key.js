@@ -1,0 +1,1 @@
+export default { secretKey: "sGtydE9*pp*dsRTTrsdasad$adf&gthht"};

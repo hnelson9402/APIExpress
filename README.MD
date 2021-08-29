@@ -10,25 +10,24 @@ Este **EndPoint** devuelve la siguiente información:
   "message": {
     "nombre": "hugo",
     "rol": 1,
-    "keyToken": "b54ce0a98f2c59e0a1a57807ca8e95f944f5adbadd6fcd09fc855323d2a3845d2abb9f9148d8011a0babd681e556df4a7c9ea6b0adcfc29b2b410088f3814c87"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRFRva2VuIjoiZjkzM2ViMzgxMzUyZjhkZWVlOWEzNDZlMzQ4OWJmNWMwMWU1M2VlNzgyNDhjMDQ5OWM1YTc3NmI3MWE4MThkOCIsImlhdCI6MTYzMDI3NjMwOCwiZXhwIjoxNjMwMjk3OTA4fQ.yfhWIkIFQVsUsu7gdWlh4g4AX-993p-xQQvP_W9H8SY"
   }
 }
 ```
-***Nota:*** El **keyToken** lo deben almacenar para realizar las peticiones a la API, El **keyToken** tiene una duración de 6 horas, despues de ese tiempo debes iniciar sesión nuevamente.
+***Nota:*** El **Token** lo deben almacenar para realizar las peticiones a la API, y enviarlo en la cabezera(**Header**), con la **key**: Authorization y **value**: Bearer token, más información en: https://jwt.io/ , El **Token** tiene una duración de 6 horas, despues de ese tiempo debes iniciar sesión nuevamente.
 
 ## USUARIO
 ---
->GET public/usuario/:keyToken
+>GET public/usuario/
 
->GET public/usuario/:keyToken/:cedula
+>GET public/usuario/:cedula
 
 >POST public/usuario/
 
 **Nota:** Los siguientes datos son necesarios para registrar un nuevo usuario.
 
 ```JSON
-{
-	"keyToken": "b54ce0a98f2c59e0a1a57807ca8e95f944f5adbadd6fcd09fc855323d2a3845d2abb9f9148d8011a0babd681e556df4a7c9ea6b0adcfc29b2b410088f3814c87",
+{	
 	"nombre": "hugo",
 	"apellido": "apellido",
 	"cedula": "1143",
@@ -44,8 +43,7 @@ Este **EndPoint** devuelve la siguiente información:
 {
   "newResetPassword":"12345678",
   "confirmNewResetPassword":"12345678",
-  "IDToken":"f933eb381352f8deee9a346e3489bf5c01e53ee78248c0499c5a776b71a818d8",
-  "keyToken":"f933eb381352f8deee9a346e3489bf5c01e53ee78248c0499c5a776b71a818d8"
+  "IDToken":"f933eb381352f8deee9a346e3489bf5c01e53ee78248c0499c5a776b71a818d8"  
 }
 ```
 
