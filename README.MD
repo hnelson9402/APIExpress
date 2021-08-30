@@ -46,3 +46,13 @@ Este **EndPoint** devuelve la siguiente información:
 }
 ```
 
+>PATCH public/usuario/password
+
+```JSON
+{
+	"oldPassword": "123456789*",
+	"newPassword": "123456789",
+	"confirmNewPassword": "123456789"
+}
+```
+

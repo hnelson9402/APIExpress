@@ -13,6 +13,9 @@ router.get('/:cedula',validate.token,controller.user);
 //save new user
 router.post('/', validate.formUser,controller.save);
 
+//update user password
+router.patch('/password' , validate.updatePassword,controller.updatePassword)
+
 //Reset password
 router.patch('/resetPassword',validate.resetPassword,controller.resetPassword)
   

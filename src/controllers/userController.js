@@ -57,8 +57,26 @@ controller.save = async (req , res) =>{
     }      
 };
 
+//update user password
+controller.updatePassword = async(req,res) => {   
+    try {        
+        const IDToken = req.IDToken;
+        const { newPassword } = req.body;        
+        let passEnc = await generatePassword(newPassword);            
+        
+        let results = await connection.awaitQuery('UPDATE usuario set password = ? WHERE IDToken = ?',[passEnc,IDToken]);
+        if (results.affectedRows > 0) {            
+            res.status(200).json(error('ok','Contraseña actualizada'));
+        } else {
+            res.status(400).json(error('error','No se puede actualizar la contraseña')); 
+        }
+    } catch (err) {
+        res.status(500).json(error('error', 'No se puede actualizar la contraseña'));   
+    }  
+}
+
 //Reset password
-controller.resetPassword = async (req,res,next) => {
+controller.resetPassword = async (req,res) => {
     try {        
         const { newResetPassword , IDToken } = req.body;        
         let passEnc = await generatePassword(newResetPassword);            

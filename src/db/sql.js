@@ -12,4 +12,14 @@ sqlQuery.ifExists = async (data,table,condition1,condition2) => {
     }
 }
 
+//validate if exists a data y return
+sqlQuery.searchData = async(data,table,condition1,condition2) => {
+    try {
+        let results = await connection.awaitQuery(`SELECT ${data} FROM ${table} WHERE ${condition1} = ? `,[condition2]);        
+        return results != "" ? results[0] : false;
+    } catch (error) {
+        return false;
+    }
+}
+
 export default sqlQuery;

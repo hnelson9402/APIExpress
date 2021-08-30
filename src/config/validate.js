@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import isset , { error , validateJwt , isEmpty } from "./validatorHNPT.js";
+import isset , { error , validateJwt , isEmpty , comparePassword } from "./validatorHNPT.js";
 import key from '../config/key.js';
 import sqlQuery from './../db/sql.js';
 
@@ -107,6 +107,54 @@ validate.token = (req,res,next) => {
         }        
     } catch (error) {
         res.status(401).json(error('error','El token es invalido o ya expiro, vuelva a iniciar sesión'));
+    }
+}
+
+//validate update user password
+validate.updatePassword = async (req,res,next) => {
+    try {
+        let schema = yup.object().shape({                       
+            oldPassword: yup.string().required("El campo Contraseña antigua es requerido").min(8,"La contraseña debe tener un mínimo de 8 caracteres"),           
+            newPassword: yup.string().required("El campo nueva contraseña es requerido").min(8,"La contraseña debe tener un minimo de 8 caracteres"),
+            confirmNewPassword: yup.string().required("El campo confirmar contraseña es requerido").min(8,"La contraseña debe tener un minimo de 8 caracteres"),
+        });
+        await schema.validate(req.body);  
+        
+        const { oldPassword , newPassword , confirmNewPassword } = req.body;
+
+        //validate if exists the header Authorization
+        let token = req.headers.authorization;
+        if (isset(token) || isEmpty(token)) {
+            res.status(400).json(error('error','El token de autorización es requerido'));
+        } 
+        
+        let getStateToken =  validateJwt(token.split(" ")[1],key.secretKey);        
+
+        //validate if the token is correct
+        if (!getStateToken) {
+             res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
+        } 
+        
+        let userPassword = await sqlQuery.searchData('password','usuario','IDToken',getStateToken.IDToken);
+        
+        //validate if get the password of user
+        if (!userPassword) {
+            res.status(500).json('error','Error interno');
+        }
+
+        let validateOldPassword = await comparePassword(oldPassword , userPassword.password);
+
+        //validate if the old password is correct
+        if (!validateOldPassword) {
+             res.status(401).json(error('error','La contraseña antigua no coincide'))
+        } else if (newPassword !== confirmNewPassword) {
+             res.status(400).json(error('error','Las contraseñas son diferentes'));
+        } else {
+            req.IDToken = getStateToken.IDToken;
+            next();
+        }
+    } catch (err) {
+        res.status(400).json(error('error',err.errors[0]));
     }
 }
 
