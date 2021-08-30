@@ -14,20 +14,3 @@ create table if not exists usuario(
 	IDToken varchar(500) not null,
 	fecha varchar(17) not null
 )
-
-create table if not exists token(    
-	token varchar(500) not null,		
-	fecha datetime not null,	
-	FK_ID_USUARIO int not null 	
-)
-
-
---Se crea relai�n entre la tabla usuario y token
-ALTER TABLE token
-   ADD CONSTRAINT FK_ID_USUARIO FOREIGN KEY (FK_ID_USUARIO)
-      REFERENCES usuario (ID_USUARIO)
-      ON DELETE RESTRICT
-      ON UPDATE CASCADE
-
-
-/*Insertar entrada de prueba*/

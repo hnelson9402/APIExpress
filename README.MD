@@ -28,21 +28,22 @@ Este **EndPoint** devuelve la siguiente información:
 
 ```JSON
 {	
-	"nombre": "hugo",
-	"apellido": "apellido",
-	"cedula": "1143",
-	"correo": "prueba@prueba.com",
-	"rol": "1",
-	"estado": "activo",
-	"password": "123456789",
-	"confirmPassword": "123456789"	
+ "nombre": "hugo",
+ "apellido": "apellido",
+ "cedula": "1143",
+ "correo": "prueba@prueba.com",
+ "rol": "1",
+ "estado": "activo",
+ "password": "123456789",
+ "confirmPassword": "123456789"	
 }
 ```
 >PATCH  public/usuario/resetPassword
 ```JSON
 {
-  "newResetPassword":"12345678",
-  "confirmNewResetPassword":"12345678",                   "IDToken":"f933eb381352f8deee9a346e3489bf5c01e53ee78248c0499c5a776b71a818d8"  
+ "newResetPassword":"12345678",
+ "confirmNewResetPassword":"12345678",                   
+"IDToken":"f933eb381352f8deee9a346e3489bf5c01e53ee78248c0499c5a776b71a818d8"  
 }
 ```
 
@@ -50,9 +51,9 @@ Este **EndPoint** devuelve la siguiente información:
 
 ```JSON
 {
-	"oldPassword": "123456789*",
-	"newPassword": "123456789",
-	"confirmNewPassword": "123456789"
+ "oldPassword": "123456789*",
+ "newPassword": "123456789",
+ "confirmNewPassword": "123456789"
 }
 ```
 
