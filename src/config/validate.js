@@ -158,4 +158,37 @@ validate.updatePassword = async (req,res,next) => {
     }
 }
 
+//validate update user rol and status
+validate.updateUser = async(req,res,next) => {
+     try {
+        let schema = yup.object().shape({                       
+            userStatus: yup.string().required("El campo Estado es requerido").matches(/^[a-z]+$/,"Estado invalido"),           
+            userRol: yup.string().required("El campo Rol es requerido").matches(/^[0-9]$/,"Rol invalido"),
+            IDToken: yup.string().required("El campo IDToken es requerido"),
+        });
+        await schema.validate(req.body);  
+
+        let token = req.headers.authorization;
+        if (isset(token) || isEmpty(token)) {
+            res.status(400).json(error('error','El token de autorización es requerido'));
+        } 
+
+        let getStateToken =  validateJwt(token.split(" ")[1],key.secretKey);   
+        const {userStatus,userRol} = req.body;     
+
+        //validate if the token is correct
+        if (!getStateToken) {
+             res.status(400).json(error('error','El keyToken ingresado no es valido o ya expiro, vuelva a iniciar sesión'));
+        } else if (userStatus !== 'activo' && userStatus !== 'inactivo') {
+            res.status(400).json(error('error','Dato invalido en el campo Estado'));
+        } else if (userRol !== '1' && userRol !== '2' && userRol !== '3') {
+            res.status(400).json(error('error','Dato invalido en el campo Rol'));
+        } else {
+            next()
+        }
+     } catch (err) {
+        res.status(400).json(error('error',err.errors[0]));
+     }
+}
+
 export default validate;

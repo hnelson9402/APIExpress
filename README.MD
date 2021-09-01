@@ -38,7 +38,7 @@ Este **EndPoint** devuelve la siguiente información:
  "confirmPassword": "123456789"	
 }
 ```
->PATCH  public/usuario/resetPassword
+>PATCH  public/usuario/reset-password
 ```JSON
 {
  "newResetPassword":"12345678",
@@ -54,6 +54,16 @@ Este **EndPoint** devuelve la siguiente información:
  "oldPassword": "123456789*",
  "newPassword": "123456789",
  "confirmNewPassword": "123456789"
+}
+```
+
+>PATCH public/usuario/update-user
+
+```JSON
+{
+ "userRol":"3",
+ "userStatus":"activo",
+"IDToken":"8424d4a6e442401c32707abdbb41d490ede0276b73c42ded5413040372c5efbd869c8797a85ba831ca6b5c9a7a766b563156b14899362f6e6c7bec2b7fdb9a19"
 }
 ```
 

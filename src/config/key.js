@@ -1,1 +1,4 @@
-export default { secretKey: "sGtydE9*pp*dsRTTrsdasad$adf&gthht"};
+import {config} from 'dotenv'
+config();
+
+export default { secretKey: process.env.SECRETKEY};

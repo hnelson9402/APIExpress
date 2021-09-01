@@ -53,7 +53,7 @@ controller.save = async (req , res) =>{
             res.status(400).json(error('error','No se puede registrar el usuario')); 
         }
     } catch (err) {
-        res.status(500).json(error('error', err));   
+        res.status(500).json(error('error', 'Error interno del servidor'));   
     }      
 };
 
@@ -90,6 +90,22 @@ controller.resetPassword = async (req,res) => {
     } catch (err) {
         res.status(500).json(error('error', err));   
     }  
+}
+
+//update user rol and status
+controller.updateUser = async(req,res) => {
+    try {        
+        const { userRol , userStatus , IDToken } = req.body;                            
+        
+        let results = await connection.awaitQuery('UPDATE usuario set estado = ? , rol = ? WHERE IDToken = ?',[userStatus,userRol,IDToken]);
+        if (results.affectedRows > 0) {            
+            res.status(200).json(error('ok','Estado de usuario actualizado'));
+        } else {
+            res.status(400).json(error('error','No se puede actualizar el usuario')); 
+        }
+    } catch (err) {
+        res.status(500).json(error('error', 'Error interno del servidor'));   
+    }    
 }
 
 

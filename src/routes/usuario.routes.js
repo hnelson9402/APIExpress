@@ -17,6 +17,9 @@ router.post('/', validate.formUser,controller.save);
 router.patch('/password' , validate.updatePassword,controller.updatePassword)
 
 //Reset password
-router.patch('/resetPassword',validate.resetPassword,controller.resetPassword)
+router.patch('/reset-password',validate.resetPassword,controller.resetPassword)
+
+//update rol and status
+router.patch('/update-user',validate.updateUser,controller.updateUser)
   
 export default router
