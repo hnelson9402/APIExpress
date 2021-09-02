@@ -117,8 +117,8 @@ validate.updatePassword = async (req,res,next) => {
             oldPassword: yup.string().required("El campo Contraseña antigua es requerido").min(8,"La contraseña debe tener un mínimo de 8 caracteres"),           
             newPassword: yup.string().required("El campo nueva contraseña es requerido").min(8,"La contraseña debe tener un minimo de 8 caracteres"),
             confirmNewPassword: yup.string().required("El campo confirmar contraseña es requerido").min(8,"La contraseña debe tener un minimo de 8 caracteres"),
-        });
-        await schema.validate(req.body);  
+        });        
+        await schema.validate(req.body); 
         
         const { oldPassword , newPassword , confirmNewPassword } = req.body;
 
@@ -139,7 +139,7 @@ validate.updatePassword = async (req,res,next) => {
         
         //validate if get the password of user
         if (!userPassword) {
-            res.status(500).json('error','Error interno');
+            res.status(500).json(error('error','Error interno'));
         }
 
         let validateOldPassword = await comparePassword(oldPassword , userPassword.password);
